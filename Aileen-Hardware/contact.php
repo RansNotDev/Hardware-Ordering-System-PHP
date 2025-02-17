@@ -146,19 +146,23 @@
                         <?php } ?>
                       </div>
                       <?php
-                          $passSql = "SELECT * FROM users WHERE id='$userId'"; 
-                          $passResult = mysqli_query($conn, $passSql);
-                          $passRow=mysqli_fetch_assoc($passResult);
-                          $email = $passRow['email'];
-                          $phone = $passRow['phone'];
-                          
+                          if($loggedin) {
+                            $passSql = "SELECT * FROM users WHERE id='$userId'"; 
+                            $passResult = mysqli_query($conn, $passSql);
+                            $passRow = mysqli_fetch_assoc($passResult);
+                            $email = $passRow['email'] ?? '';
+                            $phone = $passRow['phone'] ?? '';
+                          } else {
+                            $email = '';
+                            $phone = '';
+                          }
                       ?>
                       <form action="partials/_manageContactUs.php" method="POST">
                         <div class="row">
                           <div class="col-lg-6">
                             <div class="form-group mt-3">
                                 <b><label for="email">Email:</label></b>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Your Email" required value="<?php echo $email ?>">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Your Email" required value="<?php echo htmlspecialchars($email); ?>">
                             </div>
                           </div>
                           <div class="col-lg-6">
@@ -168,7 +172,7 @@
                                     <div class="input-group-prepend">
                                       <span class="input-group-text" id="basic-addon">+91</span>
                                     </div>
-                                    <input type="tel" class="form-control" id="phone" name="phone" aria-describedby="basic-addon" placeholder="Enter Your Phone Number" required pattern="[0-9]{10}" value="<?php echo $phone ?>">
+                                    <input type="tel" class="form-control" id="phone" name="phone" aria-describedby="basic-addon" placeholder="Enter Your Phone Number" required pattern="[0-9]{10}" value="<?php echo htmlspecialchars($phone); ?>">
                                 </div>
                             </div>
                           </div>

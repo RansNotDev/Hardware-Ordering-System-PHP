@@ -139,15 +139,21 @@
         if($status >= 1 && $status <= 4) {
             $deliveryDetailSql = "SELECT * FROM `deliverydetails` WHERE `orderId`= $orderid";
             $deliveryDetailResult = mysqli_query($conn, $deliveryDetailSql);
-            $deliveryDetailRow = mysqli_fetch_assoc($deliveryDetailResult);
-            $trackId = $deliveryDetailRow['id'];
-            $deliveryBoyName = $deliveryDetailRow['deliveryBoyName'];
-            $deliveryBoyPhoneNo = $deliveryDetailRow['deliveryBoyPhoneNo'];
-            $deliveryTime = $deliveryDetailRow['deliveryTime'];
-            if($status == 4)
-                $deliveryTime = 'xx';
-        }
-        else {
+            
+            if($deliveryDetailResult && mysqli_num_rows($deliveryDetailResult) > 0) {
+                $deliveryDetailRow = mysqli_fetch_assoc($deliveryDetailResult);
+                $trackId = $deliveryDetailRow['id'];
+                $deliveryBoyName = $deliveryDetailRow['deliveryBoyName'];
+                $deliveryBoyPhoneNo = $deliveryDetailRow['deliveryBoyPhoneNo'];
+                $deliveryTime = ($status == 4) ? 'xx' : $deliveryDetailRow['deliveryTime'];
+            } else {
+                // Set default values if no delivery details found
+                $trackId = 'N/A';
+                $deliveryBoyName = 'Not Assigned';
+                $deliveryBoyPhoneNo = 'N/A';
+                $deliveryTime = 'N/A';
+            }
+        } else {
             $trackId = 'xxxxx';
             $deliveryBoyName = '';
             $deliveryBoyPhoneNo = '';
